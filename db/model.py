@@ -15,3 +15,14 @@ class Record(ndb.Model):
     user = ndb.KeyProperty(kind=User)
     created = ndb.DateTimeProperty(auto_now_add=True)
     notes = ndb.TextProperty()
+
+
+class Config(ndb.Model):
+    created = ndb.DateTimeProperty(auto_now_add=True)
+    modified = ndb.DateTimeProperty(auto_now=True)
+    jwt_secret = ndb.StringProperty(default='')
+
+    @classmethod
+    def get_primary_db(cls):
+        return cls.get_or_insert('primary')
+
