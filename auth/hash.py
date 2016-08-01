@@ -8,5 +8,5 @@ def password_encrypt(password):
     return pass_hash
 
 
-def password_verify(password, pass_hash):
-    return pbkdf2_sha512.verify("password", hash)
+def password_verify(password, password_hash):
+    return pbkdf2_sha512.verify(password, password_hash)

@@ -21,6 +21,9 @@ class Config(ndb.Model):
     created = ndb.DateTimeProperty(auto_now_add=True)
     modified = ndb.DateTimeProperty(auto_now=True)
     jwt_secret = ndb.StringProperty(default='')
+    jwt_exp_seconds = ndb.IntegerProperty(default=3600)
+    jwt_iss = ndb.StringProperty(default='')
+    jwt_sub = ndb.StringProperty(default='')
 
     @classmethod
     def get_primary_db(cls):

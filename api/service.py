@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import endpoints
 from protorpc import remote
-
+import auth
+import db.model
 import message
 
 
@@ -14,6 +15,10 @@ class UsersApi(remote.Service):
         http_method='POST',
         name='user.token')
     def token_user(self, request):
-        # TODO: JWT token
-        token = request.email + ':' + request.password
+        user = db.model.User.get_by_email(request.email)
+        if user and auth.password_verify(request.password, user.password_hash):
+            token = auth.token_from_user(user)
+        else:
+            raise endpoints.UnauthorizedException('Wrong user.')
+
         return message.AuthToken(token=token)
