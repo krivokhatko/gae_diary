@@ -16,6 +16,10 @@ class Record(ndb.Model):
     created = ndb.DateTimeProperty(auto_now_add=True)
     notes = ndb.TextProperty()
 
+    @classmethod
+    def query_records(cls, user_key):
+        return cls.query(cls.user == user_key,).order(-cls.created)
+
 
 class Config(ndb.Model):
     created = ndb.DateTimeProperty(auto_now_add=True)

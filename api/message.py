@@ -9,3 +9,11 @@ class UserCredentials(messages.Message):
 
 class AuthToken(messages.Message):
     token = messages.StringField(1)
+
+
+class DiaryRecord(messages.Message):
+    notes = messages.StringField(1, required=True)
+
+
+class DiaryRecordCollection(messages.Message):
+    items = messages.MessageField(DiaryRecord, 1, repeated=True)

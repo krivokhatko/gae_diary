@@ -4,4 +4,4 @@ import endpoints
 import api.service
 import config
 
-api = endpoints.api_server([api.service.UsersApi])
+api = endpoints.api_server([api.service.UsersApi, api.service.DiaryApi])
