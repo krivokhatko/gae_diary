@@ -48,7 +48,7 @@ class DiaryApi(remote.Service):
         http_method='POST',
         name='record.add')
     def add_record(self, request):
-        user, token = self.authenticate(request)
+        user = db.model.User.get_by_email('user0@email.com')
         if user:
             record = db.model.Record(user=user.key, notes=request.notes)
             record.put()
@@ -62,10 +62,10 @@ class DiaryApi(remote.Service):
         http_method='GET',
         name='record.list')
     def list_record(self, request):
-        user, token = self.authenticate(self.request_state)
+        user = db.model.User.get_by_email('user0@email.com')
         if user:
             msg_records = list()
             records = db.model.Record.query_records(user.key)
-            for rec in records[:5]:
-                msg_records.append(message.DiaryRecord(notes=rec.notes))
+            for rec in records:
+                msg_records.append(message.DiaryRecord(notes=rec.notes, created=rec.created))
             return message.DiaryRecordCollection(items=msg_records)

@@ -7,6 +7,9 @@ threadsafe: yes
 handlers:
 - url: /_ah/spi/.*
   script: main.api
+- url: /
+  static_dir: static
+
 
 libraries:
 - name: webapp2

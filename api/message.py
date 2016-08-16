@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from protorpc import messages
+from protorpc import message_types
 
 
 class UserCredentials(messages.Message):
@@ -13,6 +14,7 @@ class AuthToken(messages.Message):
 
 class DiaryRecord(messages.Message):
     notes = messages.StringField(1, required=True)
+    created = message_types.DateTimeField(2)
 
 
 class DiaryRecordCollection(messages.Message):
