@@ -1,26 +1,48 @@
 var RecordBox = React.createClass({
   loadNotesFromServer: function() {
-      if(google.appengine.hopster.diary.api_ready) {
-          google.appengine.hopster.diary.list (
-              function (resp) {
-                  if (!resp.code) {
-                      resp.items = resp.items || [];
-                      this.setState({data: resp.items});
-                  }
-              }.bind(this)
-          );
+      if(google.appengine.hopster.diary.api_ready){
+          var token = sessionStorage.getItem('accessToken') || null;
+          if (token) {
+              google.appengine.hopster.diary.list(
+                  token,
+                  function (resp) {
+                      if (!resp.code) {
+                          resp.items = resp.items || [];
+                          this.setState({data: resp.items});
+                      }
+                  }.bind(this)
+              );
+          }
       }
 
   },
   handleRecordSubmit: function(notes) {
       if(google.appengine.hopster.diary.api_ready) {
-          gapi.client.diary.record.add(notes).execute(
-              function (resp) {}.bind(this));
+          var token = sessionStorage.getItem('accessToken') || null;
+          if (token) {
+              google.appengine.hopster.diary.add(
+                  notes,
+                  token,
+                  function (resp) {
+                  }.bind(this)
+              );
+          }
       }
 
   },
-  handleLoginSubmit: function(auth) {
-      this.setState({authComplete: true});
+  handleLoginSubmit: function(creditionals) {
+      google.appengine.hopster.user.token (
+          creditionals,
+          function (resp) {
+              if (!resp.code) {
+                  resp.token = resp.token || null;
+                  if(resp.token) {
+                      sessionStorage.setItem('accessToken', resp.token);
+                      this.setState({authComplete: true});
+                  }
+              }
+          }.bind(this)
+      );
   },
   getInitialState: function() {
     return {data: [], authComplete: false};

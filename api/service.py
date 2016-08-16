@@ -13,6 +13,7 @@ class UsersApi(remote.Service):
     @endpoints.method(
         message.UserCredentials,
         message.AuthToken,
+        auth_level=endpoints.AUTH_LEVEL.NONE,
         path='token',
         http_method='POST',
         name='user.token')
@@ -44,11 +45,12 @@ class DiaryApi(remote.Service):
     @endpoints.method(
         message.DiaryRecord,
         message_types.VoidMessage,
+        auth_level=endpoints.AUTH_LEVEL.NONE,
         path='add',
         http_method='POST',
         name='record.add')
     def add_record(self, request):
-        user = db.model.User.get_by_email('user0@email.com')
+        user, token = self.authenticate(self.request_state)
         if user:
             record = db.model.Record(user=user.key, notes=request.notes)
             record.put()
@@ -58,11 +60,12 @@ class DiaryApi(remote.Service):
     @endpoints.method(
         message_types.VoidMessage,
         message.DiaryRecordCollection,
+        auth_level=endpoints.AUTH_LEVEL.NONE,
         path='list',
         http_method='GET',
         name='record.list')
     def list_record(self, request):
-        user = db.model.User.get_by_email('user0@email.com')
+        user, token = self.authenticate(self.request_state)
         if user:
             msg_records = list()
             records = db.model.Record.query_records(user.key)
